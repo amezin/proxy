@@ -27,7 +27,7 @@ public:
 	}
 
 	virtual int handle(int pollflags) {
-		log.trace() << "Static response handler invoked";
+		log.debug() << "Static response handler invoked";
 
 		off += sock().write(response.c_str() + off, response.size() - off);
 		if (response.size() == off) {
