@@ -33,7 +33,7 @@ public:
 	intrusive_ptr<socket> accept();
 
 	ssize_t read(void *buf, ssize_t count);
-	ssize_t write(void *buf, ssize_t count);
+	ssize_t write(const void *buf, ssize_t count);
 
 	int descriptor() const {
 		return fd;

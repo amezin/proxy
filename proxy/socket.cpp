@@ -192,7 +192,7 @@ ssize_t socket::read(void *buf, ssize_t count) {
 	throw errno_exception(errno);
 }
 
-ssize_t socket::write(void *buf, ssize_t count) {
+ssize_t socket::write(const void *buf, ssize_t count) {
 	log.trace() << "Writing " << count << " bytes to socket " << fd;
 	check_so_error();
 
