@@ -22,6 +22,8 @@ const std::string head_method("HEAD");
 const std::string url_prefix("http://");
 const std::string default_port("80");
 
+const std::string content_length("Content-Length");
+
 }
 
 void client_headers_handler::handle_first_line(const std::string &ln) {
@@ -91,6 +93,10 @@ bool client_headers_handler::handle_line(const std::string &ln) {
 	request->append_char('\n');
 
 	if (!ln.empty()) {
+		if (std::strncmp(ln.c_str(), content_length.c_str(), content_length.length()) == 0) {
+			throw not_implemented_error("Requests with entities not implemented");
+		}
+
 		log.trace() << "HTTP Header: " << ln;
 		return true;
 	}
