@@ -34,7 +34,8 @@ int main(unsigned short port) {
 		while (q.poll()) {
 			for (;;) {
 				try {
-					if (!q.pop()) break;
+					if (!q.pop())
+						break;
 				} catch (std::exception &e) {
 					log.warning() << "Error occurred: " << e.what();
 				}
@@ -80,11 +81,15 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
 
-	if (argc - 1 >= ARG_LOG_VERBOSITY) {
-		myproxy::log.severity(
-				static_cast<myproxy::logger::severity_level>(parse_int_arg(
-						argv[ARG_LOG_VERBOSITY],
-						myproxy::logger::severity_level_count)));
+	try {
+		if (argc - 1 >= ARG_LOG_VERBOSITY) {
+			myproxy::log.severity(
+					static_cast<myproxy::logger::severity_level>(myproxy::logger::severity_from_string(
+							argv[ARG_LOG_VERBOSITY])));
+		}
+	} catch (std::exception &e) {
+		myproxy::log.error() << e.what();
+		return EXIT_FAILURE;
 	}
 
 	return myproxy::main(
