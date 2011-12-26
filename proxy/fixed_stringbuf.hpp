@@ -56,6 +56,15 @@ public:
 		reset();
 	}
 
+	explicit fixed_stringbuf(const Char *str) {
+		reset();
+		Char *p = buf;
+		while (*str && p + 1 < buf + Size) {
+			*p++ = *str++;
+		}
+		*p = 0;
+	}
+
 	const Char *get() const {
 		return buf;
 	}

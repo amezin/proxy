@@ -42,6 +42,8 @@ int client_line_handler::handle(int pollf) {
 		errordesc = &error_pages::not_implemented;
 	} catch (http_version_not_supported_error &e) {
 		errordesc = &error_pages::version_not_supported;
+	} catch (dns_error &) {
+		errordesc = &error_pages::not_found;
 	} catch (...) {
 		errordesc = &error_pages::internal_error;
 	}

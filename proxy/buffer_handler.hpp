@@ -28,7 +28,7 @@ public:
 		if (_buf->size() == _buf->capacity()) {
 			_buf->grow();
 		}
-		ssize_t resize = sock()->read(_buf->ptr(), _buf->capacity() - _buf->size());
+		ssize_t resize = sock()->read(_buf->ptr() + _buf->size(), _buf->capacity() - _buf->size());
 		_buf->size(_buf->size() + resize);
 		return (resize > 0) ? POLLIN : 0;
 	}

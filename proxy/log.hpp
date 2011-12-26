@@ -34,12 +34,14 @@ public:
 		severity_level_count
 	};
 
+	static const char *severity_to_string(severity_level l);
+	static severity_level severity_from_string(const char *);
+
 private:
 
 	std::set<FILE *> sinks;
-	message_buffer buffer;
 
-	void broadcast();
+	void broadcast(severity_level level, const char *msg);
 
 	severity_level min_level;
 
@@ -65,17 +67,20 @@ public:
 	};
 
 	class message {
+		message_buffer buffer;
 		stream ls;
 		bool enable;
+		severity_level level;
 		logger *target;
+
 	public:
-		message(bool enabled, logger &parent) :
-				ls(parent.buffer), enable(enabled), target(&parent) {
+		message(severity_level l, bool enabled, logger &parent) :
+				ls(buffer), enable(enabled), level(l), target(&parent) {
 
 		}
 
 		message(const message &r) :
-				ls(r.target->buffer), enable(r.enable), target(r.target) {
+				buffer(r.buffer.get()), ls(buffer), enable(r.enable), level(r.level), target(r.target) {
 
 		}
 
@@ -106,13 +111,13 @@ public:
 
 		~message() {
 			if (enable)
-				target->broadcast();
+				target->broadcast(level, buffer.get());
 		}
 
 	};
 
 	message level(severity_level l) {
-		return message(l >= min_level, *this);
+		return message(l, l >= min_level, *this);
 	}
 
 	message trace() {

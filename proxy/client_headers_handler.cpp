@@ -10,6 +10,7 @@
 
 #include "log.hpp"
 #include "client_headers_handler.hpp"
+#include "pipe_connect.hpp"
 
 namespace myproxy {
 
@@ -69,6 +70,14 @@ void client_headers_handler::handle_first_line(const std::string &ln) {
 	} else {
 		port = default_port;
 	}
+
+	request->append(method.begin(), method.end());
+	request->append_char(' ');
+	request->append(url.begin(), url.end());
+	request->append_char(' ');
+	request->append(version.begin(), version.end());
+	request->append_char('\r');
+	request->append_char('\n');
 }
 
 bool client_headers_handler::handle_line(const std::string &ln) {
@@ -77,10 +86,18 @@ bool client_headers_handler::handle_line(const std::string &ln) {
 		return true;
 	}
 
+	request->append(ln.begin(), ln.end());
+	request->append_char('\r');
+	request->append_char('\n');
+
 	if (!ln.empty()) {
 		log.trace() << "HTTP Header: " << ln;
 		return true;
 	}
+
+	intrusive_ptr<socket> serv(new socket());
+	serv->connect(host.c_str(), port.c_str());
+	queue().push(new pipe_connect(serv, queue(), request, sock()), POLLOUT);
 
 	return false;
 }

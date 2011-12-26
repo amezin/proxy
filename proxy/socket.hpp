@@ -9,10 +9,18 @@
 #define SOCKET_HPP_
 
 #include <cstdio>
+#include <stdexcept>
 
 #include "ref_count.hpp"
 
 namespace myproxy {
+
+class dns_error : public std::runtime_error {
+public:
+	dns_error(const std::string &arg) : std::runtime_error(arg) {
+
+	}
+};
 
 class socket : public ref_counted {
 	int fd;

@@ -36,7 +36,7 @@ int main(unsigned short port) {
 				try {
 					if (!q.pop()) break;
 				} catch (std::exception &e) {
-					log.error() << "Error occurred: " << e.what();
+					log.warning() << "Error occurred: " << e.what();
 				}
 			}
 		}

@@ -17,6 +17,8 @@ class client_headers_handler: public client_line_handler {
 	std::string host, port;
 	std::string method, url, version;
 
+	intrusive_ptr<buffer> request;
+
 	void handle_first_line(const std::string &ln);
 
 protected:
@@ -26,7 +28,7 @@ protected:
 public:
 
 	client_headers_handler(const intrusive_ptr<socket> s, event_queue &q) :
-			client_line_handler(s, q) {
+			client_line_handler(s, q), request(new buffer()) {
 
 	}
 

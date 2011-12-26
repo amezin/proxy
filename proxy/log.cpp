@@ -5,21 +5,51 @@
  *      Author: sanya-m
  */
 
+#include <cassert>
+#include <stdexcept>
+#include <cstring>
+
 #include "log.hpp"
 
 namespace myproxy {
 
 logger log;
 
-void logger::broadcast() {
-	if (buffer.empty())
+namespace {
+	const char * const severity_name[] = {
+			"TRACE",
+			"DEBUG",
+			"INFO",
+			"WARN",
+			"ERROR"
+	};
+}
+
+const char *logger::severity_to_string(severity_level l) {
+	if (l < 0 || l >= severity_level_count) {
+		return 0;
+	}
+	return severity_name[l];
+}
+
+logger::severity_level logger::severity_from_string(const char *s) {
+	for (int i = 0; i < severity_level_count; i++) {
+		if (!strcmp(severity_name[i], s)) {
+			return (severity_level)i;
+		}
+	}
+	throw std::runtime_error(std::string("Invalid log severity: ") + s);
+}
+
+void logger::broadcast(severity_level level, const char *msg) {
+	assert(msg);
+
+	if (!*msg)
 		return;
 
 	for (std::set<FILE *>::iterator i = sinks.begin(); i != sinks.end(); i++) {
-		std::fprintf(*i, "%s\n", buffer.get());
+		std::fprintf(*i, "%s\t%s\n", severity_to_string(level), msg);
 	}
-
-	buffer.reset();
 }
 
 logger::logger(severity_level l) :

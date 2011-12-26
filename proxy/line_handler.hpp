@@ -27,12 +27,12 @@ protected:
 
 	virtual bool handle_char(char c) {
 		if (line.size() >= max_line_length) {
-			throw std::length_error("Request/response first line too long");
+			throw std::length_error("Request/response header is too long");
 		}
 
 		if (c == '\n') {
 			if (line.length() && line[line.length() - 1] == '\r') line.erase(line.length() - 1, 1);
-			int r = handle_line(line);
+			bool r = handle_line(line);
 			if (r) line.clear();
 			return r;
 		}

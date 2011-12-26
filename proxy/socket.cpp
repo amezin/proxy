@@ -66,7 +66,7 @@ void socket::connect(const char *host, const char *port) {
 		if (r != EAI_MEMORY) {
 			log.warning() << "Error when resolving address " << host << ": "
 					<< ::gai_strerror(r);
-			throw std::runtime_error(std::string(::gai_strerror(r)));
+			throw dns_error(std::string(::gai_strerror(r)));
 		}
 		log.debug() << "EAI_MEMORY when resolving address";
 		new_handler();
