@@ -15,7 +15,7 @@ namespace myproxy {
 namespace error_pages {
 
 extern const ::std::string bad_request, not_found, internal_error,
-		not_implemented, bad_gateway, service_unavailable;
+		not_implemented, bad_gateway, service_unavailable, version_not_supported;
 
 }
 

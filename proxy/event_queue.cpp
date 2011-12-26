@@ -98,14 +98,14 @@ bool event_queue::pop() {
 }
 
 void event_queue::push(const intrusive_ptr<connection_handler> &p, int events) {
-	log.trace() << "Pushing socket " << p->sock().descriptor() << " to queue";
+	log.trace() << "Pushing socket " << p->sock()->descriptor() << " to queue";
 
 	assert(p);
 
 	::pollfd pfd;
 	pfd.revents = 0;
 	pfd.events = events;
-	pfd.fd = p->sock().descriptor();
+	pfd.fd = p->sock()->descriptor();
 
 	new_handlers.push_back(p);
 	try {

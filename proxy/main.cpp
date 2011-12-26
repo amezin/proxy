@@ -32,7 +32,13 @@ int main(unsigned short port) {
 		event_queue q;
 		q.push(new client_connect_handler(server, q), POLLIN);
 		while (q.poll()) {
-			while (q.pop());
+			for (;;) {
+				try {
+					if (!q.pop()) break;
+				} catch (std::exception &e) {
+					log.error() << "Error occurred: " << e.what();
+				}
+			}
 		}
 
 	} catch (std::exception &e) {

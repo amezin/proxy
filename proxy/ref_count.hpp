@@ -153,7 +153,7 @@ public:
 
 	template<typename T2>
 	intrusive_ptr(const intrusive_ptr<T2> &r) :
-			ptr(r.ptr) {
+			ptr(r.raw()) {
 		intrusive_ptr_base::add_ref(ptr);
 #ifdef REF_COUNT_PTR_DEBUG
 		log.trace() << "Copied intrusive_ptr to " << ptr;
@@ -165,9 +165,9 @@ public:
 #ifdef REF_COUNT_PTR_DEBUG
 		log.trace() << "Assigning intrusive_ptr to " << ptr << " = " << r.ptr;
 #endif
-		intrusive_ptr_base::add_ref(r.ptr);
+		intrusive_ptr_base::add_ref(r.raw());
 		intrusive_ptr_base::release(ptr);
-		ptr = r.ptr;
+		ptr = r.raw();
 		return *this;
 	}
 

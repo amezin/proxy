@@ -11,7 +11,7 @@
 #include "log.hpp"
 #include "errno_exception.hpp"
 #include "event_queue.hpp"
-#include "static_response_handler.hpp"
+#include "client_headers_handler.hpp"
 #include "error_pages.hpp"
 
 namespace myproxy {
@@ -25,8 +25,8 @@ public:
 
 	virtual int handle(int pollflags) {
 		log.debug() << "Client connection handler invoked";
-		intrusive_ptr<socket> s = sock().accept();
-		queue().push(new static_response_handler(error_pages::not_implemented, s, queue()), POLLOUT);
+		intrusive_ptr<socket> s = sock()->accept();
+		queue().push(new client_headers_handler(s, queue()), POLLIN);
 		return POLLIN;
 	}
 

@@ -29,7 +29,7 @@ public:
 	virtual int handle(int pollflags) {
 		log.debug() << "Static response handler invoked";
 
-		off += sock().write(response.c_str() + off, response.size() - off);
+		off += sock()->write(response.c_str() + off, response.size() - off);
 		if (response.size() == off) {
 			log.trace() << "Response is sent completely";
 			return 0;

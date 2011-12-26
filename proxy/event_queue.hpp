@@ -36,8 +36,8 @@ public:
 		return q;
 	}
 
-	socket &sock() const {
-		return *(this->sck);
+	const intrusive_ptr<socket> &sock() const {
+		return this->sck;
 	}
 
 	virtual int handle(int pollflags) = 0;
