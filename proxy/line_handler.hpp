@@ -17,8 +17,6 @@ namespace myproxy {
 class line_handler: public parser_handler {
 public:
 
-	static const std::size_t max_line_length = 1024;
-
 private:
 
 	std::string line;
@@ -26,10 +24,6 @@ private:
 protected:
 
 	virtual bool handle_char(char c) {
-		if (line.size() >= max_line_length) {
-			throw std::length_error("Request/response header is too long");
-		}
-
 		if (c == '\n') {
 			if (line.length() && line[line.length() - 1] == '\r') line.erase(line.length() - 1, 1);
 			bool r = handle_line(line);
